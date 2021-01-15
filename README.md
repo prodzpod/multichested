@@ -1,5 +1,7 @@
 Multichested
 ======================
+![Multichested logo](./icon.png)
+
 ![Three chests](https://cdn.discordapp.com/attachments/728607222040494183/799689001749184522/unknown.png)  
 Mod that does this.
 
