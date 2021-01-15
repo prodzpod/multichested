@@ -1,0 +1,8 @@
+{
+    "name": "Multichested",
+    "description": "Spawns more chests and enemies per how many players you got.",
+	"internalname": "multichested",
+    "version": "1.0.0",
+    "author": "prodzpod",
+    "mpcompat": true
+}
