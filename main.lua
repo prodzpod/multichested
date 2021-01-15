@@ -66,9 +66,6 @@ local openMultipliedChest = net.Packet.new("openMultipliedChest", function(playe
             end
         end
     end
-    if net.host then
-        openMultipliedChest:sendAsHost(net.ALL, nil, id)
-    end
 end)
 callback("onMapObjectActivate", function(instance, player)
     if net.host then

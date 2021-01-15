@@ -11,6 +11,8 @@ Multichested is a mod for [Risk of Rain 1](https://store.steampowered.com/app/24
 
 ## Changelog
 
+### 1.1.2
+fixed "attempt to index global 'openMultipliedChest' (a nil value)" when trying to call itself + playtested
 ### 1.1.1
 More drops per more health. only logical!
 ### 1.1.0
