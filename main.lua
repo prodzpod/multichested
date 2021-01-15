@@ -10,6 +10,9 @@ local multiplyChest = function(obj, x, y, num, players)
     local n = num * players
     for i = 1, players do
         local newinst = obj:create(newx, y)
+        while newinst:collidesMap(newx, newinst.y + 3) do
+            newinst.y = newinst.y - 3
+        end
         n = n + 1
         inst:set("m_id", n + 339000)
         newx = newx + interval
