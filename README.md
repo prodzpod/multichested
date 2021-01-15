@@ -8,3 +8,15 @@ Multichested is a mod for [Risk of Rain 1](https://store.steampowered.com/app/24
 * [RoR Modloader](https://cdn.rainfusion.ml/launcher-download)
 * [Rainfusion](https://rainfusion.ml/)
 * [RoR1 Discord](https://discord.gg/ajsGTdN)
+
+## Changelog
+
+### 1.0.2
+added changelog
+
+### 1.0.1
+Fixed floating chests to not float
+added README
+
+### 1.0
+Initial Commit
