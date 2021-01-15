@@ -11,6 +11,8 @@ Multichested is a mod for [Risk of Rain 1](https://store.steampowered.com/app/24
 
 ## Changelog
 
+### 1.1.0
+Buffs only enemies, changed armor from health in case "armor piercing" becomes op
 ### 1.0.3
 Fixed accidental rollback on main.lua
 ### 1.0.2

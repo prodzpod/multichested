@@ -79,7 +79,10 @@ callback("onMapObjectActivate", function(instance, player)
 end)
 
 callback("onActorInit", function(actor)
-    number = #(Object.find("P"):findAll())
-    local def = actor:get("armor")
-    actor:set("armor", def * number)
+	if (actor:get("team") == "enemy") then
+		number = #(Object.find("P"):findAll())
+		local def = actor:get("maxhp")
+		actor:set("hp", def * number)
+		actor:set("maxhp", def * number)
+	end
 end)
