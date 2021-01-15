@@ -10,40 +10,76 @@ local multiplyChest = function(obj, x, y, num, players)
     local n = num * players
     for i = 1, players do
         local newinst = obj:create(newx, y)
-        while newinst:collidesMap(newx, newinst.y + 3) do
-            newinst.y = newinst.y - 3
-        end
         n = n + 1
-        inst:set("m_id", n + 339000)
+        newinst:set("m_id", n - 3390)
         newx = newx + interval
     end
 end
 
-multiplyChestPacket = net.Packet.new("multiplyChest", function(player, obj, x, y, num, players)
-    log("packet recieved: multiplyChest with id " .. num)
+local multiplyChestPacket = net.Packet.new("multiplyChest", function(player, obj, x, y, num, players)
     multiplyChest(obj, x, y, num, players)
 end)
-
+local removeOriginalChestPacket = net.Packet.new("removeOriginalChest", function(player, netinst)
+    local inst = netinst:resolve()
+    if inst:isValid() then
+        inst:destroy()
+    end
+end)
 local oChestMultiplier = Object.new("oChestMultiplier")
 callback("onStageEntry", function()
     if net.host then
         oChestMultiplier:create(0, 0)
     end
 end)
+oChestMultiplier:addCallback("create", function(self)
+    self:getData().time = 1
+end)
 oChestMultiplier:addCallback("step", function(self)
-    self:destroy()
+    if (self:getData().time == 0) then
+        self:destroy()
+    end
+    self:getData().time = self:getData().time - 1
 end)
 oChestMultiplier:addCallback("destroy", function(self)
     number = #(Object.find("P"):findAll())
-    if (number ~= 1 and net.host) then -- no need to trigger this when 1 player is active
+    if number ~= 1 then -- no need to trigger this when 1 player is active
         for _, type in ipairs(chests) do
             for _, inst in ipairs(type:findAll()) do
-                log("spawning chests number " .. current)
-                multiplyChest(type, inst.x, inst.y, current, number)
-                multiplyChestPacket:sendAsHost(net.ALL, nil, type, inst.x, inst.y, current, number)
-                current = current + 1
-                inst:destroy()
+                if net.host then
+                    multiplyChest(type, inst.x, inst.y, current, number)
+                    multiplyChestPacket:sendAsHost(net.ALL, nil, type, inst.x, inst.y, current, number)
+                    current = current + 1
+                    removeOriginalChestPacket:sendAsHost(net.ALL, nil, inst:getNetIdentity())
+                    inst:destroy()
+                end
             end
         end
     end
+end)
+
+local openMultipliedChest = net.Packet.new("openMultipliedChest", function(player, id)
+    for _, type in ipairs(chests) do
+        for _, inst in ipairs(type:findAll()) do
+            if (inst:get("m_id") == id) then
+                inst:setAlarm(0, 30)
+                return
+            end
+        end
+    end
+    if net.host then
+        openMultipliedChest:sendAsHost(net.ALL, nil, id)
+    end
+end)
+callback("onMapObjectActivate", function(instance, player)
+    if net.host then
+        openMultipliedChest:sendAsHost(net.ALL, nil, instance:get("m_id"))
+    else
+        openMultipliedChest:sendAsClient(instance:get("m_id"))
+    end
+end)
+
+callback("onActorInit", function(actor)
+    number = #(Object.find("P"):findAll())
+    local def = actor:get("armor")
+    actor:set("armor", def * number)
 end)
